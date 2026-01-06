@@ -35,15 +35,21 @@ class Course:
         self.description
 
 class Person:
-    def __init__(self):
-        self.f_name
-        self.l_name
+    def __init__(self,fName,lName):
+        self.f_name = fName
+        self.l_name = lName
 
 class Admin:
-    def __init__(self,fname,lname):
+    def __init__(self,fname,lname,ID, Pword):
         Person.__init__(self,fname,lname)
-        self.admin_ID = "admin"
-        self.admin_Password = "password"
+        self.admin_ID = ID
+        self.admin_Password = Pword
+    
+    def getId(self):
+        return self.admin_ID
+    
+    def getPassword(self):
+        return self.admin_Password
 
 class Student:
     def __init__(self,fname,lname):
@@ -75,9 +81,16 @@ students = [
     ("James","Green","JamGr06","4b9Y-beOD",[]),
     ("Sofia","Collins","SofCo02","yxam-Iy1u",[])
 ]
+administrator = Admin("Renee","Carroll","admin","password")
+print(administrator.getId())
+print(administrator.getPassword())
 # ==========   MAIN    ==========
-print("Welcome to the Registration System")
-#Ask for user login
-#Menu for Student or Admin
-#Exit Menu
-print("Have a nice day")
+# print("Welcome to the Registration System")
+#     #Ask for user login
+# user = input("User:")
+# pWord = input("Password:")
+
+# print(f"User : {user}\nPassword:{pWord}")
+#     #Menu for Student or Admin
+#     #Exit Menu
+# print("Have a nice day")
