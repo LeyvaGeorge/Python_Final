@@ -1,4 +1,4 @@
-#Student Course Registration System
+""" School Registration System"""
 """
 1.User Authentication:
 Implement a basic login system with predefined usernames and passwords for students and administrators. 
@@ -26,13 +26,66 @@ BOTH:
 
 """
 # ==========  CLASSES  ==========
+class University:
+    def __init__(self):
+        self.admins = []   #This is the admins for the School Registration System
+        self.students = []
+        self.courses = []
+    
+    def addAdmins(self, adm_to_add):
+        if isinstance(adm_to_add, Admin):
+            self.admins.append(adm_to_add)
+        else:
+            print("Error: You can only enroll valid Admin objects")
+    def addStu(self, stu_to_add):
+        if isinstance(stu_to_add, Student):
+            self.students.append(stu_to_add)
+        else:
+            print("Error: You can only enroll valid student objects.")
+
+    def addCourse(self,course_to_add):
+        if isinstance(course_to_add, Course):
+            self.courses.append(course_to_add)
+        else:
+            print("Error: You can only enroll valid Course objects.")
+    
+    def printCourses(self):
+        for index in self.courses:
+            print(f"Title:{index.title}")
+            print(f"ID:{index.id}")
+            print(f"Credit:{index.credit}")
+            print(f"Capacity:{index.capacity}")
+            print(f"Description:{index.description}")
+    #this is the menu 
+    def start(self):
+        """The main entry point for the program."""
+        while True:
+            print("\n --- Welcome to the School Registration System ---")
+            print("1. Login")
+            print("2. Exit")
+            choice = input("Select an option: ")
+            
+            if choice == "1":
+                self.login()
+            elif choice == '2':
+                print("Goodbye!")
+                break
+            else:
+                print("Invalid choice, please try again.")
+    #TODO
+    def login(self):
+        user_id = input ("Enter ID: ")
+        password = input("Enter Password: ")
+        print(user_id, " ", password)
+
 class Course:
-    def __init__(self,title,id,credit,capacity,description):
-        self.title 
-        self.id 
-        self.credit 
-        self.capacity
-        self.description
+    def __init__(self, ti, id, cr, ca,desc):
+        self.title = ti
+        self.id = id
+        self.credit = cr 
+        self.capacity = ca
+        self.description = desc
+        self.stuID = [] #adds id to see who is enrolled
 
 class Person:
     def __init__(self,fName,lName):
@@ -62,15 +115,14 @@ class Admin(Person):
         return self.admin_Password
 
 class Student(Person):
-    def __init__(self,fname,lname):
+    def __init__(self,fname,lname,id, password):
         Person.__init__(self,fname,lname)
-        self.user_name
-        self.password
+        self.id = id
+        self.password = password
         self.reg_course = []
 
 # ========== FUNCTION  ==========
 # ==========   SETUP   ==========
-class_list = []
 catalog = [
     ("Intro Art","AR100",3, 30,"Develop skiils to successfully draw the human form." ),
     ("English 101","EN101",3, 25,"Students receive instruction in academic reading and writing, including writing processes, effective use of language, analytical thinking, and the foundations of academic research."),
@@ -80,32 +132,49 @@ catalog = [
     ("Beginning Guitar","MU054",1, 5,"This course offers individual guitar instruction to students who have little or no previous training.")
 ]
 students = [
-    ("Liam","Smith","LiaSm95","owU9-A3WD",[]),
-    ("Olivia","Taylor","OliTa01","25le-C87z",[]),
-    ("Oliver","White","OliWh05","0glu-zi1D",[]),
-    ("Emily","Leyva","EmiLe02","vcnJ-Gl98",[]),
-    ("Levi","Clark","LevCl90","WZ7o-n5QJ",[]),
-    ("Isabella","Ferrero","IsaFe03","SDg9-DT9l",[]),
-    ("William","Young","WilYo97","J38D-NXN3",[]),
-    ("Ava","King","AvaKi99","QX1I-sswP",[]),
-    ("James","Green","JamGr06","4b9Y-beOD",[]),
-    ("Sofia","Collins","SofCo02","yxam-Iy1u",[])
+    ("Liam","Smith","LiaSm95","owU9-A3WD"),
+    ("Olivia","Taylor","OliTa01","25le-C87z"),
+    ("Oliver","White","OliWh05","0glu-zi1D"),
+    ("Emily","Leyva","EmiLe02","vcnJ-Gl98"),
+    ("Levi","Clark","LevCl90","WZ7o-n5QJ"),
+    ("Isabella","Ferrero","IsaFe03","SDg9-DT9l"),
+    ("William","Young","WilYo97","J38D-NXN3"),
+    ("Ava","King","AvaKi99","QX1I-sswP"),
+    ("James","Green","JamGr06","4b9Y-beOD"),
+    ("Sofia","Collins","SofCo02","yxam-Iy1u")
 ]
 
 #Creates and Administrator with ID and password
 administrator = Admin("Renee","Carroll","admin","password")
-
+CSUglobal = University()
+for title, id, credit, capacity, description in catalog:
+    classroom = Course(title, id, credit, capacity, description)
+    CSUglobal.addCourse(classroom)
+for first,last, identifier, secret in students:
+    body = Student(first,last,identifier,secret)
+    CSUglobal.addStu(body)
 # ==========   MAIN    ==========
-print("Welcome to the Registration System")
-    #Ask for user login
-user = input("User:")
-pWord = input("Password:")
+CSUglobal.start()
 
-print(f"User : {user}\nPassword:{pWord}")
-    #Menu for Student or Admin
-print(f"{administrator.getName()}")
-if user == administrator.admin_ID and pWord == administrator.admin_Password:
-    name = administrator.getName()
-    print(f"Welcome Administrator {name}")
-    #Exit Menu
+
+
+
+
+
+
+
+    #Ask for user login
+# user = input("User:")
+# pWord = input("Password:")
+
+#     #Menu for Student or Admin
+# if user == administrator.admin_ID and pWord == administrator.admin_Password:
+#     name = administrator.getName()
+#     print(f"Welcome Administrator {name}")
+#     #TODO
+#     #function for admin
+#     #Exit Menu
+    
+# else:
+#     print("No file was found!")
 print("Have a nice day")
