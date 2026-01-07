@@ -39,7 +39,17 @@ class Person:
         self.f_name = fName
         self.l_name = lName
 
-class Admin:
+    def getFirstName(self):
+        return self.f_name
+    
+    def getLastName(self):
+        return self.l_name
+    
+    def getName(self):
+        str = self.f_name + ' ' + self.l_name
+        return str
+    
+class Admin(Person):
     def __init__(self,fname,lname,ID, Pword):
         Person.__init__(self,fname,lname)
         self.admin_ID = ID
@@ -51,7 +61,7 @@ class Admin:
     def getPassword(self):
         return self.admin_Password
 
-class Student:
+class Student(Person):
     def __init__(self,fname,lname):
         Person.__init__(self,fname,lname)
         self.user_name
@@ -62,10 +72,10 @@ class Student:
 # ==========   SETUP   ==========
 class_list = []
 catalog = [
-    ("Intro Art","AR100",3,30,"Develop skiils to successfully draw the human form." ),
-    ("English 101","EN101",3,25,"Students receive instruction in academic reading and writing, including writing processes, effective use of language, analytical thinking, and the foundations of academic research."),
-    ("Algebra","MA105",3,30,"This course covers graphing of polynomial, rational and transcendental functions." ),
-    ("Calculus","MA135",3,25,"This course covers functions and their graphs, including exponential and logarithmic functions."),
+    ("Intro Art","AR100",3, 30,"Develop skiils to successfully draw the human form." ),
+    ("English 101","EN101",3, 25,"Students receive instruction in academic reading and writing, including writing processes, effective use of language, analytical thinking, and the foundations of academic research."),
+    ("Algebra","MA105",3, 30,"This course covers graphing of polynomial, rational and transcendental functions." ),
+    ("Calculus","MA135",3, 25,"This course covers functions and their graphs, including exponential and logarithmic functions."),
     ("Anatomy & Physiology","AP102",5,20,"This course is the first in a two part series covering the topics of the chemical, cellular, and tissue levels of organization"),
     ("Beginning Guitar","MU054",1, 5,"This course offers individual guitar instruction to students who have little or no previous training.")
 ]
@@ -81,16 +91,21 @@ students = [
     ("James","Green","JamGr06","4b9Y-beOD",[]),
     ("Sofia","Collins","SofCo02","yxam-Iy1u",[])
 ]
-administrator = Admin("Renee","Carroll","admin","password")
-print(administrator.getId())
-print(administrator.getPassword())
-# ==========   MAIN    ==========
-# print("Welcome to the Registration System")
-#     #Ask for user login
-# user = input("User:")
-# pWord = input("Password:")
 
-# print(f"User : {user}\nPassword:{pWord}")
-#     #Menu for Student or Admin
-#     #Exit Menu
-# print("Have a nice day")
+#Creates and Administrator with ID and password
+administrator = Admin("Renee","Carroll","admin","password")
+
+# ==========   MAIN    ==========
+print("Welcome to the Registration System")
+    #Ask for user login
+user = input("User:")
+pWord = input("Password:")
+
+print(f"User : {user}\nPassword:{pWord}")
+    #Menu for Student or Admin
+print(f"{administrator.getName()}")
+if user == administrator.admin_ID and pWord == administrator.admin_Password:
+    name = administrator.getName()
+    print(f"Welcome Administrator {name}")
+    #Exit Menu
+print("Have a nice day")
