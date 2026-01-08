@@ -60,7 +60,6 @@ class University:
     def start(self):
         """The main entry point for the program."""
         while True:
-            print("\n --- Welcome to the School Registration System ---")
             print("1. Login")
             print("2. Exit")
             choice = input("Select an option: ")
@@ -123,6 +122,7 @@ class Student(Person):
 
 # ========== FUNCTION  ==========
 # ==========   SETUP   ==========
+#List of classes to add to the management system
 catalog = [
     ("Intro Art","AR100",3, 30,"Develop skiils to successfully draw the human form." ),
     ("English 101","EN101",3, 25,"Students receive instruction in academic reading and writing, including writing processes, effective use of language, analytical thinking, and the foundations of academic research."),
@@ -131,6 +131,7 @@ catalog = [
     ("Anatomy & Physiology","AP102",5,20,"This course is the first in a two part series covering the topics of the chemical, cellular, and tissue levels of organization"),
     ("Beginning Guitar","MU054",1, 5,"This course offers individual guitar instruction to students who have little or no previous training.")
 ]
+#Creates a list of students to add to the management system
 students = [
     ("Liam","Smith","LiaSm95","owU9-A3WD"),
     ("Olivia","Taylor","OliTa01","25le-C87z"),
@@ -143,18 +144,26 @@ students = [
     ("James","Green","JamGr06","4b9Y-beOD"),
     ("Sofia","Collins","SofCo02","yxam-Iy1u")
 ]
-
 #Creates and Administrator with ID and password
 administrator = Admin("Renee","Carroll","admin","password")
+
+#Instatiate the Main Management System
 CSUglobal = University()
+#Adds courses to the Management System
 for title, id, credit, capacity, description in catalog:
     classroom = Course(title, id, credit, capacity, description)
     CSUglobal.addCourse(classroom)
+#Adds students to the Management System
 for first,last, identifier, secret in students:
     body = Student(first,last,identifier,secret)
     CSUglobal.addStu(body)
+#Adds the single Admin with Name, ID, password
+CSUglobal.addAdmins(administrator)
+
 # ==========   MAIN    ==========
+print("\n --- Welcome to the School Registration System ---")
 CSUglobal.start()
+print("Have a nice day")
 
 
 
@@ -177,4 +186,3 @@ CSUglobal.start()
     
 # else:
 #     print("No file was found!")
-print("Have a nice day")
