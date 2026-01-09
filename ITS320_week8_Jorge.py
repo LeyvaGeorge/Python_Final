@@ -47,15 +47,24 @@ class University:
             self.courses.append(course_to_add)
         else:
             print("Error: You can only enroll valid Course objects.")
-    #This is for understanding ++++++++++++++++++++++++++++++
-    def addCourseAction(self,user):
-        #check if user has permission
-        if not user.has_permission("add_course"):
-            print("Access denined")
-            return
-        #TODO enter the course to append onto this
-        self.courses.append(course)
-        print("Appended to courses -Delete this.")
+    def removeCourse(self,course_to_remove):
+        if isinstance(course_to_remove, Course):
+            try:
+                self.courses.remove(course_to_remove)
+            except:
+                print("Fix removeCourse() to remove a valid course")
+        else:
+            print("Error: You can only remove a valid Course object. ")
+        
+        #This is for understanding ++++++++++++++++++++++++++++++
+        # def addCourseAction(self,user):
+        #     #check if user has permission
+        #     if not user.has_permission("add_course"):
+        #         print("Access denined")
+        #         return
+        #     #TODO enter the course to append onto this
+        #     self.courses.append(course)
+        #     print("Appended to courses -Delete this.")
 
     def printCourses(self):
         for index in self.courses:
@@ -65,6 +74,38 @@ class University:
             print(f"Capacity:{index.capacity}")
             print(f"Description:{index.description}")
     
+    def findcourse(self):
+        while True:
+            print("1. Search by Title")
+            print("2. Search by ID")
+            ans = input("Input: ")
+            if ans == '1':
+                ans = input("Title: ")
+                for index in self.courses:
+                    if ans == index.title:
+                        return index
+                print("Did not find course by Title")
+                return None
+            elif ans == '2':
+                ans = input("ID: ")
+                for index in self.courses:
+                    if ans == index.id:
+                        return index
+                print("Did not find Course by Index")
+                return None
+            else:
+                print("Must be either 1 or 2")
+
+    def printCourse(self,singleCourse : type[Course]):
+        if not singleCourse:
+            print("The argument was empty")
+            raise Exception ('The course was empty or None')
+        print(f"Title: {singleCourse.title}")
+        print(f"ID:{singleCourse.id}")
+        print(f"Credit:{singleCourse.credit}")
+        print(f"Capacity:{singleCourse.capacity}")
+        print(f"Description:{singleCourse.description}")
+        
     #this is the menu 
     def start(self):
         """The main entry point for the program."""
@@ -104,7 +145,7 @@ class University:
             print("1. Add new Course")
             print("2. Remove Course")
             print("3. Update Course details")
-            print("4. Search for courses by Title or Course ID")
+            print("4. Search for course")
             print("5. List all Courses")
             print("6. List all students registerd for a specific course")
             print("7. List all Courses for a specific Student")
@@ -112,16 +153,38 @@ class University:
             print("9. Exit")
             choice = input("select an option: ")
 
+            #Adds a new course to courses attributes
             if choice == '1':
-                print("TODO")
+                print("\nAdding New Course")
+                newTitle = input("Title: ")
+                newID = input("ID: ")
+                newCredit = int(input("Credit: "))
+                newCapacity = int(input("Capacity: "))
+                newDescription = input("Description: ")
+
+                newCourse = Course(newTitle,newID,newCredit,newCapacity,newDescription)
+                self.addCourse(newCourse)
+                print("New Course was added")
             elif choice == '2':
-                print("TODO")
+                print("Removing an Existing Course")
+                unwanted = input("ID: ")
+                for index in self.courses:
+                    if index.id == unwanted:
+                        self.removeCourse(index)
             elif choice == '3':
+                print("Updating course information.")
+                indCourse = self.findcourse()
+                self.editCourse(findCourse)
                 print("TODO")
+            #Searchs courses by ID or Title
             elif choice == '4':
+                print("Finding course.") 
+                courseInfo = self.findcourse()  #finds course
+                self.printCourse(courseInfo)    #prints course information
                 print("TODO")
+            #Prints out all Courses
             elif choice == '5':
-                print("TODO")
+                self.printCourses()
             elif choice == '6':
                 print("TODO")
             elif choice == '7':
