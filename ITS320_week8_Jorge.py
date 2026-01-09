@@ -56,15 +56,6 @@ class University:
         else:
             print("Error: You can only remove a valid Course object. ")
         
-        #This is for understanding ++++++++++++++++++++++++++++++
-        # def addCourseAction(self,user):
-        #     #check if user has permission
-        #     if not user.has_permission("add_course"):
-        #         print("Access denined")
-        #         return
-        #     #TODO enter the course to append onto this
-        #     self.courses.append(course)
-        #     print("Appended to courses -Delete this.")
 
     def printCourses(self):
         for index in self.courses:
@@ -143,7 +134,41 @@ class University:
         print(f"Credit:{singleCourse.credit}")
         print(f"Capacity:{singleCourse.capacity}")
         print(f"Description:{singleCourse.description}")
+
+    #Prints all the student in the course
+    def printStudentsCourse(self):
+        courseId = input("Course ID: ")             #Get course ID
+        for index in self.courses:                  #Loops in courses
+            if courseId == index.id:                #Matches courses to typed in course
+                self.printCourse(index)             #Prints current course
+                print("The Number of student in", courseId , "of this ",len(index.stuID)) 
+                for i in range(len(index.stuID)):   #checks the length of course's students registered
+                    for names in self.students:     #Loops in Students
+                        if names.id == index.stuID[i]:          #matches Student to course's student registered list
+                            print(f"Name: {names.getName()}")   #prints out Student Name
+                    print(f"ID: {index.stuID[i]}")              #Prints out student ID
+                    #length of studId print name and ID
+    
+    def printCoursesforStudent(self):
+        #Find Student
+        studentIdentification = input("Student ID: ")
+        for i in range(len(self.students)):
+            if studentIdentification == self.students[i].get_id():
+                for courseName in self.students[i].registered_course:
+                    for indexCourse in self.courses:
+                        if courseName == indexCourse.id:
+                            print(f"Title: {indexCourse.title}")
+                            print(f"ID: {indexCourse.id}")
+                    
+                break
+        #Print Courses that they are enrolled in
         
+    #Prints all of students information
+    def printStu(self):
+        for i in range(len(self.students)):
+            print("\nName: ",self.students[i].getName())
+            print("ID: ", self.students[i].get_id())
+            print("Password: ", self.students[i].get_password())
     #this is the menu 
     def start(self):
         """The main entry point for the program."""
@@ -166,12 +191,12 @@ class University:
         #TODO must find a way to implement on how to look for user_id in self.admins and students
         for director in self.admins:
             if user_id == director.id:
-                print("found exit out")
+                
                 self.admin_menu(director)
                 return director
         for learner in self.students:
             if user_id == learner.id:
-                print("found student exit out")
+                print("found student exit out around line 178")
                 self.student_menu(learner)
                 return learner
         else:
@@ -180,6 +205,7 @@ class University:
     
     def admin_menu(self,admin: type[Admin]):
         while True:
+            print(f"\n {admin.getName()} Admin Menu")
             print("1. Add new Course")
             print("2. Remove Course")
             print("3. Update Course details")
@@ -203,32 +229,39 @@ class University:
                 newCourse = Course(newTitle,newID,newCredit,newCapacity,newDescription)
                 self.addCourse(newCourse)
                 print("New Course was added")
+            #Removes course based of ID
             elif choice == '2':
                 print("Removing an Existing Course")
                 unwanted = input("ID: ")
                 for index in self.courses:
                     if index.id == unwanted:
                         self.removeCourse(index)
+            #Update course information Title, ID, capacity, description
             elif choice == '3':
                 print("Updating course information.")
                 foundCourse = self.findcourse()
                 self.editCourse(foundCourse)
-                print("TODO")
             #Searchs courses by ID or Title
             elif choice == '4':
                 print("Finding course.") 
                 courseInfo = self.findcourse()  #finds course
                 self.printCourse(courseInfo)    #prints course information
-                print("TODO")
+                
             #Prints out all Courses
             elif choice == '5':
+                print("Print all Courses")
                 self.printCourses()
+            #List all students for a specific course
             elif choice == '6':
-                print("TODO")
+                print("Students in course")
+                self.printStudentsCourse()      #prints students in course
             elif choice == '7':
-                print("TODO")
+                print("Student Courses")
+                self.printCoursesforStudent()
+            #Prints all students Name, ID, Password
             elif choice == '8':
-                print("TODO")
+                print("Priting all Student information")
+                self.printStu()
             elif choice == '9':
                 break
             else:
@@ -267,6 +300,25 @@ class Course:
         self.description = desc
         self.stuID = [] #adds id to see who is enrolled
 
+    #Checks to see if capacity is full
+    def has_space(self):
+        return len(self.stuID) < self.capacity
+    
+    def add_student(self, student_ID):
+        if self.has_space():
+            self.stuID.append(student_ID)
+            self.capacity -= 1
+            return True #needed for Course to add to check that it was added onto course
+        return False
+    
+    def has_student(self, student_ID):
+        #Checks to see if student is in this course
+        pass
+
+    def remove_student(self, student_ID):
+        #Must remove student from current course if match +1 to capacity
+        pass
+
 class Permissions:
     ADD_COURSE = "add_course"
     REMOVE_COURSE = "remove_course"
@@ -295,6 +347,10 @@ class User(Person):
         self.password = pWord
         self.permissions = set()
 
+    def get_password(self):
+        return self.password
+    def get_id(self):
+        return self.id
     def has_permission(self, permission):
         return permission in self.permissions    
 
@@ -315,6 +371,13 @@ class Student(User):
             Permissions.ENROLL_COURSE
         })
         self.registered_course = []
+
+    def register_for_course(self, course : type[Course]):
+        if course.add_student(self.id):
+            self.registered_course.append(course.id)
+            print(f"{self.getName()} successfully registered for {course.title}")
+        else:
+            print(f"Registration failed: {course.title} is full.")
 
 # ========== FUNCTION  ==========
 # ==========   SETUP   ==========
@@ -356,7 +419,10 @@ for first,last, identifier, secret in students:
     CSUglobal.addStu(body)
 #Adds the single Admin with Name, ID, password
 CSUglobal.addAdmins(administrator)
-
+#Adding george to IntroArt and Calculus
+CSUglobal.students[0].register_for_course(CSUglobal.courses[0])
+CSUglobal.students[0].register_for_course(CSUglobal.courses[3])
+CSUglobal.students[1].register_for_course(CSUglobal.courses[0])
 # ==========   MAIN    ==========
 print("\n --- Welcome to the School Registration System ---")
 CSUglobal.start()
