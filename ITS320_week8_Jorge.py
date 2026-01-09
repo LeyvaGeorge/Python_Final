@@ -96,10 +96,48 @@ class University:
             else:
                 print("Must be either 1 or 2")
 
+    def editCourse(self, singleCourse: type[Course] ):
+        if not singleCourse:
+            print("the argument was empty")
+            raise Exception ("The course was empty or None. In editCourse()")
+        while True:
+            print("Choose what to change:")
+            print("1.Title")
+            print("2.ID")
+            print("3. Credit")
+            print("4. Capacity")
+            print("5. Description")
+            print("6. Back")
+            ans = input("Input:")
+            if ans == '1':
+                ans = input("New Title: ")
+                singleCourse.title = ans
+                break
+            elif ans == '2':
+                ans = input("New ID: ")
+                singleCourse.id = ans
+                break
+            elif ans == '3':
+                ans = int(input("New Credit: "))
+                singleCourse.credit = ans
+                break
+            elif ans == '4':
+                ans = int(input("New Capacity: "))
+                singleCourse.capacity = ans
+                break
+            elif ans == '5':
+                ans = input("New Description")
+                singleCourse.description = ans
+                break
+            elif  ans == '6':
+                break
+            else:
+                print("The input was not valid")
+
     def printCourse(self,singleCourse : type[Course]):
         if not singleCourse:
             print("The argument was empty")
-            raise Exception ('The course was empty or None')
+            raise Exception ('The course was empty or None. in printCourse()')
         print(f"Title: {singleCourse.title}")
         print(f"ID:{singleCourse.id}")
         print(f"Credit:{singleCourse.credit}")
@@ -173,8 +211,8 @@ class University:
                         self.removeCourse(index)
             elif choice == '3':
                 print("Updating course information.")
-                indCourse = self.findcourse()
-                self.editCourse(findCourse)
+                foundCourse = self.findcourse()
+                self.editCourse(foundCourse)
                 print("TODO")
             #Searchs courses by ID or Title
             elif choice == '4':
