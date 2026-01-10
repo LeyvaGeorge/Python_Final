@@ -1,28 +1,6 @@
 """ School Registration System"""
 """
-1.User Authentication:
-Implement a basic login system with predefined usernames and passwords for students and administrators. 
-Use the ID “admin” for the Administrator, with password “password”.
-2.Course Management:
-Course Management by Admin:
-- Add new courses.
-- Remove courses.
-- Update course details (like title, description, credits, capacity).- 
-- Search for courses by title or course ID.
-Student Course Registration:
-- Allow students to register for courses.
-- Allow students to drop courses.
-3.Reports:
-ADMIN:
-- List all students registered for a specific course.
-- List all courses for which a specific student registered.
-- List of all student IDs and passwords.
-STUDENTS:
-- List all courses for which this student registered.
-BOTH:
-- List all courses (showing if each is still full or not.)
-4.Additional Features:
-- Implement capacity limits for courses and prevent registration if the course is full.
+Work in progress. Does have all working features.
 
 """
 # ==========  CLASSES  ==========
@@ -157,7 +135,7 @@ class University:
                 for courseName in self.students[i].registered_course:
                     for indexCourse in self.courses:
                         if courseName == indexCourse.id:
-                            print(f"Title: {indexCourse.title}")
+                            print(f"\nTitle: {indexCourse.title}")
                             print(f"ID: {indexCourse.id}")
                     
                 break
@@ -169,6 +147,27 @@ class University:
             print("\nName: ",self.students[i].getName())
             print("ID: ", self.students[i].get_id())
             print("Password: ", self.students[i].get_password())
+
+    def dropCourse(self, user : type[Student]):
+        ans = input("Course ID: ")
+        #check courses to see if student is on selected course
+        for room in self.courses:
+            if room.id == ans:
+                #drop course 
+                room.remove_student(user.get_id()) #Courses
+                #TODO Update remove course in student
+                user.drop_course(ans)
+    
+    def printUserCourses(self, user : type[Student]):
+        course = user.getcourses()
+        length = len(course)
+        for room in self.courses:
+            for classname in course:
+                if room.id == classname:
+                    print(f"\nTitle: {room.title}")
+                    print(f"ID:{room.id}")
+                    
+
     #this is the menu 
     def start(self):
         """The main entry point for the program."""
@@ -245,8 +244,7 @@ class University:
             elif choice == '4':
                 print("Finding course.") 
                 courseInfo = self.findcourse()  #finds course
-                self.printCourse(courseInfo)    #prints course information
-                
+                self.printCourse(courseInfo)    #prints course information  
             #Prints out all Courses
             elif choice == '5':
                 print("Print all Courses")
@@ -254,7 +252,8 @@ class University:
             #List all students for a specific course
             elif choice == '6':
                 print("Students in course")
-                self.printStudentsCourse()      #prints students in course
+                self.printStudentsCourse()      
+            #Prints students in course
             elif choice == '7':
                 print("Student Courses")
                 self.printCoursesforStudent()
@@ -262,6 +261,7 @@ class University:
             elif choice == '8':
                 print("Priting all Student information")
                 self.printStu()
+            #Exits out of Menu
             elif choice == '9':
                 break
             else:
@@ -270,6 +270,7 @@ class University:
 
     def student_menu(self,user: type[Student]):
         while True:
+            print(f"\n {user.getName()} Menu")
             print("1. Register for Course")
             print("2. Drop Course")
             print("3. List all Courses")
@@ -277,14 +278,26 @@ class University:
             print("5. Exit")
             choice = input("select an option: ")
 
+            #Register for a course
             if choice == '1':
-                print("TODO")
+                print("Register for Course")
+                ans = input("Course ID: ")
+                for course in self.courses:
+                    if course.id == ans:
+                        if course.has_space(user):
+                            course.add_student(user.get_id())
+            #Drop an enrolled course
             elif choice == '2':
-                print("TODO")
+                print("Dropping Course")                       
+                self.dropCourse(user)
+            #Print all courses available
             elif choice == '3':
-                print("TODO")
+                print("Print all Courses")
+                self.printCourses()
+            #Prints all user's courses
             elif choice == '4':
-                print("TODO")
+                print(f"Print all of {user.getName()} Courses")
+                self.printUserCourses(user)
             elif choice == '5':
                 break
             else:
@@ -308,7 +321,7 @@ class Course:
         if self.has_space():
             self.stuID.append(student_ID)
             self.capacity -= 1
-            return True #needed for Course to add to check that it was added onto course
+            return True #needed for (Student?)Course to add to check that it was added onto course
         return False
     
     def has_student(self, student_ID):
@@ -316,8 +329,12 @@ class Course:
         pass
 
     def remove_student(self, student_ID):
-        #Must remove student from current course if match +1 to capacity
-        pass
+        #Must remove student from current course if match; +1 to capacity
+        if not self.stuID:
+            raise Exception ("Student ID is empty!")
+        self.stuID.remove(student_ID)
+        self.capacity += 1
+        return
 
 class Permissions:
     ADD_COURSE = "add_course"
@@ -378,6 +395,14 @@ class Student(User):
             print(f"{self.getName()} successfully registered for {course.title}")
         else:
             print(f"Registration failed: {course.title} is full.")
+    
+    def drop_course(self, course):
+        self.registered_course.remove(course)
+
+    def getcourses(self):
+        if not self.registered_course:
+            raise Exception ("Course is empty")
+        return self.registered_course
 
 # ========== FUNCTION  ==========
 # ==========   SETUP   ==========
